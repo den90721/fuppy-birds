@@ -101,7 +101,7 @@ const coinImg = new Image();
 coinImg.src = 'assets/coin.png'; // Монетка
 
 const tabloImg = new Image();
-tabloImg.src = 'assets/tablo.png'; // Заменяем tablo.png на tablo.svg
+tabloImg.src = 'assets/tablo (5).png'; // Заменяем tablo.png на tablo.svg
 
 const overImg = new Image();
 overImg.src = 'assets/over.svg'; // Загружаем изображение "Game Over"
@@ -183,7 +183,7 @@ function update() {
             if (!showTablo) {
                 setTimeout(() => {
                     showTablo = true; // Показываем таблицу
-                }, 300); // Задержка перед отображением табло (500 мс)
+                }, 100); // Задержка перед отображением табло (500 мс)
             }
         }
         return;
