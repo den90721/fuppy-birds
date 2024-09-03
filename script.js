@@ -37,7 +37,7 @@ let bird = {
     width: 40,
     height: 40,
     gravity: 0.4,
-    lift: -10,
+    lift: -7,
     velocity: 0,
     rotation: 0 // Угол для поворота птицы
 };
@@ -183,7 +183,7 @@ function update() {
             if (!showTablo) {
                 setTimeout(() => {
                     showTablo = true; // Показываем таблицу
-                }, 500); // Задержка перед отображением табло (500 мс)
+                }, 300); // Задержка перед отображением табло (500 мс)
             }
         }
         return;
