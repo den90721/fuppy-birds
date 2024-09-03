@@ -110,7 +110,7 @@ const puskImg = new Image();
 puskImg.src = 'assets/pusk.svg'; // Загружаем изображение "Pusk"
 
 const zastavkaImg = new Image();
-zastavkaImg.src = 'assets/zastavka.svg'; // Загрузка изображения заставки
+zastavkaImg.src = 'assets/zastavka (3).svg'; // Загрузка изображения заставки
 
 const logoImg = new Image();
 logoImg.src = 'assets/Logo.svg'; // Загрузка изображения логотипа
