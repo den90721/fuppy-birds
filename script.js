@@ -101,7 +101,7 @@ const coinImg = new Image();
 coinImg.src = 'assets/coin.png'; // Монетка
 
 const tabloImg = new Image();
-tabloImg.src = 'assets/tablo (5).png'; // Заменяем tablo.png на tablo.svg
+tabloImg.src = 'assets/tablo (1).svg'; // Заменяем tablo.png на tablo.svg
 
 const overImg = new Image();
 overImg.src = 'assets/over.svg'; // Загружаем изображение "Game Over"
