@@ -37,7 +37,7 @@ let bird = {
     width: 40,
     height: 40,
     gravity: 0.4,
-    lift: -5,
+    lift: -7,
     velocity: 0,
     rotation: 0 // Угол для поворота птицы
 };
