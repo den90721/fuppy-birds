@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 
 // CSS стили
 const style = document.createElement('style');
-style.innerHTML = 
+style.innerHTML = `
     html, body {
         margin: 0;
         padding: 0;
@@ -18,10 +18,9 @@ style.innerHTML =
         left: 0;
     }
     img {
-    image-rendering: crisp-edges;
-}
-
-;
+        image-rendering: crisp-edges;
+    }
+`;
 document.head.appendChild(style);
 
 // Загрузка кастомного шрифта
@@ -187,7 +186,7 @@ function update() {
             if (!showTablo) {
                 setTimeout(() => {
                     showTablo = true; // Показываем таблицу
-                }, 100); // Задержка перед отображением табло (500 мс)
+                }, 100); // Задержка перед отображением табло (100 мс)
             }
         }
         return;
@@ -448,13 +447,13 @@ function render() {
     ctx.restore();
 
     // Отрисовка счета
-    ctx.font = ${48 * scale}px FlappyFont; // Используем кастомный шрифт
+    ctx.font = `${48 * scale}px FlappyFont`; // Используем кастомный шрифт
     ctx.fillStyle = '#FCB800';
     ctx.fillText(score, canvas.width / 2 - 10 * scale, 100 * scale);
 
     // Отрисовка счетчика монет
     ctx.drawImage(coinImg, 10 * scale, 10 * scale, 30 * scale, 30 * scale);
-    ctx.font = ${24 * scale}px FlappyFont; // Используем кастомный шрифт
+    ctx.font = `${24 * scale}px FlappyFont`; // Используем кастомный шрифт
     ctx.fillStyle = '#FFF';
     ctx.fillText(collectedCoins, 50 * scale, 30 * scale);
 
@@ -469,7 +468,7 @@ function render() {
         const overImgWidth = overImg.width * scale;
         const overImgHeight = overImg.height * scale;
         const overImgX = (canvas.width - overImgWidth) / 2;
-        const overImgY = tabloY - overImgHeight - 50 * scale; // Отступ 20px над таблицей
+        const overImgY = tabloY - overImgHeight - 50 * scale; // Отступ 50px над таблицей
 
         ctx.drawImage(overImg, overImgX, overImgY, overImgWidth, overImgHeight);
 
@@ -485,14 +484,14 @@ function render() {
         ctx.drawImage(puskImg, puskImgX, puskImgY, puskImgWidth, puskImgHeight);
 
         // Отрисовка счетчиков на табло (монеты первым, счет вторым)
-        ctx.font = ${36 * scale}px FlappyFont;
+        ctx.font = `${36 * scale}px FlappyFont`;
         ctx.fillStyle = '#FFF';
         ctx.fillText(collectedCoins, tabloX + tabloWidth - 66 * scale, tabloY + 57 * scale); // Монеты
         ctx.fillText(score, tabloX + tabloWidth - 66 * scale, tabloY + 98 * scale); // Счет
 
         // Отображение только промокода обычным шрифтом Arial, если собрано достаточно монет
         if (collectedCoins >= coinsForPromoCode) {
-            ctx.font = ${15 * scale}px Arial; // Шрифт Arial для промокода
+            ctx.font = `${15 * scale}px Arial`; // Шрифт Arial для промокода
             ctx.fillStyle = '#FFF';
             ctx.fillText(promoCode, tabloX + 20 * scale, tabloY + 65 * scale); // Промокод без слова "Promo"
         }
