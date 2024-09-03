@@ -20,6 +20,7 @@ style.innerHTML = `
     img {
     image-rendering: crisp-edges;
 }
+
 `;
 document.head.appendChild(style);
 
@@ -104,7 +105,7 @@ const coinImg = new Image();
 coinImg.src = 'assets/coin.png'; // Монетка
 
 const tabloImg = new Image();
-tabloImg.src = 'assets/tablo_4.svg'; // Заменяем tablo.png на tablo.svg
+tabloImg.src = 'assets/tablo (4).svg'; // Заменяем tablo.png на tablo.svg
 
 const overImg = new Image();
 overImg.src = 'assets/over.svg'; // Загружаем изображение "Game Over"
@@ -113,7 +114,7 @@ const puskImg = new Image();
 puskImg.src = 'assets/pusk.svg'; // Загружаем изображение "Pusk"
 
 const zastavkaImg = new Image();
-zastavkaImg.src = 'assets/zastavka_2.png'; // Загрузка изображения заставки
+zastavkaImg.src = 'assets/zastavka (2).png'; // Загрузка изображения заставки
 
 const logoImg = new Image();
 logoImg.src = 'assets/Logo.svg'; // Загрузка изображения логотипа
@@ -152,11 +153,6 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 canvas.addEventListener('click', function () {
-    // Проверяем, можно ли перезапускать игру
-    if (gameOver && !showTablo) {
-        return; // Если игра окончена, но табло ещё не появилось, выходим из функции
-    }
-
     if (!gameStarted || gameOver) {
         showZastavka = false; // Скрываем заставку перед запуском новой игры
         showLogo = false; // Скрываем логотип перед запуском новой игры
