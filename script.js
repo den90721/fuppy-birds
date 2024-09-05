@@ -18,7 +18,7 @@ style.innerHTML = `
         left: 0;
     }
     img {
-        image-rendering: auto;
+        image-rendering: crisp-edges;
     }
 `;
 document.head.appendChild(style);
@@ -57,11 +57,11 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-const coctelSpawnChance = 0.1;
+const coctelSpawnChance = 0.5; // Увеличиваем вероятность появления коктейлей до 50%
 
 let coins = [];
 let coinInterval = 50;
-let pipeCount = 0; // Счётчик труб
+let pipeCount = 0;
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -98,7 +98,7 @@ const fonGif = new Image();
 fonGif.src = 'assets/fon.gif';
 
 const coctelImg = new Image();
-coctelImg.src = 'assets/coctel.png';
+coctelImg.src = 'assets/coctel.png'; // Убедитесь, что путь правильный
 
 const coinImg = new Image();
 coinImg.src = 'assets/coin.png';
@@ -248,7 +248,7 @@ function update() {
         let pipe = { x: canvas.width, y: pipeY };
         pipes.push(pipe);
 
-        pipeCount++; // Увеличиваем счетчик труб
+        pipeCount++;
 
         // Если это третья труба, создаём монету
         if (pipeCount % 3 === 0) {
@@ -257,8 +257,9 @@ function update() {
             coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
         }
 
+        // Создание коктейлей
         if (Math.random() < coctelSpawnChance) {
-            let coctelY = pipeY + Math.random() * (pipeGap - 30 * scale);
+            let coctelY = Math.min(Math.max(pipeY, 50), canvas.height - 100); // Ограничиваем по Y
             coctels.push({
                 x: pipe.x,
                 y: coctelY,
@@ -292,6 +293,25 @@ function update() {
         if (!passedPipe && pipe.x + pipeWidth < bird.x) {
             score++;
             passedPipe = true;
+        }
+    });
+
+    coctels.forEach((coctel, index) => {
+        coctel.x -= 2 * scale;
+
+        if (coctel.x + coctel.width < 0) {
+            coctels.splice(index, 1);
+        }
+
+        if (
+            coctel.isVisible &&
+            bird.x < coctel.x + coctel.width &&
+            bird.x + bird.width > coctel.x &&
+            bird.y < coctel.y + coctel.height &&
+            bird.y + bird.height > coctel.y
+        ) {
+            coctel.isVisible = false;
+            activateDrunkenMode();
         }
     });
 
@@ -359,7 +379,7 @@ function render() {
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
         const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavkaY - logoHeight - 150 * scale;
+        const logoY = zastavкаY - logoHeight - 150 * scale;
 
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
@@ -497,3 +517,4 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
+
