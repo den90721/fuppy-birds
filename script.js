@@ -57,10 +57,10 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-const coctelSpawnChance = 0.2;
+const coctelSpawnChance = 0.1;
 
 let coins = [];
-let coinInterval = 100;
+let coinInterval = 50;
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -307,7 +307,7 @@ function update() {
         }
     });
 
-    if (frameCount % (coinInterval + Math.floor(Math.random() * 200)) === 0) {
+    if (frameCount % (coinInterval + Math.floor(Math.random() * 100)) === 0) {
         const randomPipeIndex = Math.floor(Math.random() * pipes.length);
         const pipe = pipes[randomPipeIndex];
         if (pipe) {
