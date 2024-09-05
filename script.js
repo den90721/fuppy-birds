@@ -60,7 +60,7 @@ let coctels = []; // Массив для коктейлей
 const coctelSpawnChance = 0.2; // Вероятность появления коктейля (20%)
 
 let coins = [];
-let coinInterval = 150; // Интервал появления монет
+let coinInterval = 100; // Интервал появления монет
 
 let groundX = 0;
 const groundSpeed = 2;
