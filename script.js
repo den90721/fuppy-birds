@@ -7,12 +7,12 @@ style.innerHTML = `
     html, body {
         margin: 0;
         padding: 0;
-        overflow: hidden; /* Отключаем скроллинг */
+        overflow: hidden;
         height: 100%;
         width: 100%;
     }
     #gameCanvas {
-        display: block; /* Убираем возможные отступы вокруг холста */
+        display: block;
         position: absolute;
         top: 0;
         left: 0;
@@ -42,7 +42,7 @@ let bird = {
     gravity: 0.4,
     lift: -6,
     velocity: 0,
-    rotation: 0 // Угол для поворота птицы
+    rotation: 0
 };
 
 let pipes = [];
@@ -54,13 +54,13 @@ let score = 0;
 let collectedCoins = 0;
 let gameStarted = false;
 let gameOver = false;
-let birdHit = false; // Новый флаг для удара
+let birdHit = false;
 
-let coctels = []; // Массив для коктейлей
-const coctelSpawnChance = 0.2; // Вероятность появления коктейля (20%)
+let coctels = [];
+const coctelSpawnChance = 0.2;
 
 let coins = [];
-let coinInterval = 100; // Интервал появления монет
+let coinInterval = 100;
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -75,11 +75,10 @@ let glitchDuration = 0;
 let backgroundGif = false;
 let showTablo = false;
 
-let shakeOnHit = false; // Флаг для активации тряски при ударе
+let shakeOnHit = false;
 
-// Условие для отображения промокода
-const coinsForPromoCode = 150; // Количество монет для появления промокода
-const promoCode = "AVAHUNNA100"; // Сам промокод
+const coinsForPromoCode = 150;
+const promoCode = "AVAHUNNA100";
 
 // Загрузка изображений
 const birdImg = new Image();
@@ -95,36 +94,35 @@ const backgroundImg = new Image();
 backgroundImg.src = 'assets/background.png';
 
 const fonGif = new Image();
-fonGif.src = 'assets/fon.gif'; // Гифка фона
+fonGif.src = 'assets/fon.gif';
 
 const coctelImg = new Image();
-coctelImg.src = 'assets/coctel.png'; // Используем правильный путь к изображению коктейля
+coctelImg.src = 'assets/coctel.png';
 
 const coinImg = new Image();
-coinImg.src = 'assets/coin.png'; // Монетка
+coinImg.src = 'assets/coin.png';
 
 const tabloImg = new Image();
-tabloImg.src = 'assets/tablo (4).svg'; // Заменяем tablo.png на tablo.svg
+tabloImg.src = 'assets/tablo (4).svg';
 
 const overImg = new Image();
-overImg.src = 'assets/over.svg'; // Загружаем изображение "Game Over"
+overImg.src = 'assets/over.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.svg'; // Загружаем изображение "Pusk"
+puskImg.src = 'assets/pusk.svg';
 
 const zastavkaImg = new Image();
-zastavkaImg.src = 'assets/zastavka (2).png'; // Загрузка изображения заставки
+zastavkaImg.src = 'assets/zastavka (2).png';
 
 const logoImg = new Image();
-logoImg.src = 'assets/Logo.svg'; // Загрузка изображения логотипа
+logoImg.src = 'assets/Logo.svg';
 
-const zastavkaScale = 1.5; // Коэффициент масштабирования для заставки
-const logoScale = 1.7; // Коэффициент масштабирования для логотипа
+const zastavkaScale = 1.5;
+const logoScale = 1.7;
 
-let showZastavka = false; // Флаг для отображения заставки
-let showLogo = false; // Флаг для отображения логотипа
+let showZastavka = false;
+let showLogo = false;
 
-// Отрисовка заставки и логотипа только после их полной загрузки
 logoImg.onload = function() {
     showLogo = true;
     render();
@@ -132,7 +130,7 @@ logoImg.onload = function() {
 
 zastavkaImg.onload = function() {
     showZastavka = true;
-    render(); // Обновляем экран с заставкой и логотипом
+    render();
 };
 
 let animationFrameId;
@@ -151,17 +149,31 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-canvas.addEventListener('click', function () {
+// Убираем запуск игры при клике по холсту
+canvas.removeEventListener('click', function () {
     if (!gameStarted || gameOver) {
-        showZastavka = false; // Скрываем заставку перед запуском новой игры
-        showLogo = false; // Скрываем логотип перед запуском новой игры
-        showTablo = false; // Скрываем таблицу перед запуском новой игры
+        showZastavka = false;
+        showLogo = false;
+        showTablo = false;
         resetGame();
         gameStarted = true;
         gameOver = false;
         startGameLoop();
     } else {
         bird.velocity = bird.lift;
+    }
+});
+
+// Добавляем обработчик клика для изображения "Pusk"
+puskImg.addEventListener('click', function () {
+    if (gameOver) {
+        showZastavka = false;
+        showLogo = false;
+        showTablo = false;
+        resetGame();
+        gameStarted = true;
+        gameOver = false;
+        startGameLoop();
     }
 });
 
@@ -177,33 +189,30 @@ function startGameLoop() {
 
 function update() {
     if (gameOver) {
-        // Если игра завершена, и птица еще не на земле, продолжаем её движение вниз
         if (bird.y + bird.height < canvas.height - 50) {
             bird.velocity += bird.gravity;
             bird.y += bird.velocity;
         } else {
-            // Птица достигла земли, показываем табло
             if (!showTablo) {
                 setTimeout(() => {
-                    showTablo = true; // Показываем таблицу
-                }, 100); // Задержка перед отображением табло (100 мс)
+                    showTablo = true;
+                }, 100);
             }
         }
         return;
     }
 
     if (birdHit) {
-        // Если птица ударилась о трубу, даем задержку перед падением
         bird.velocity = 0;
-        bird.rotation = -Math.PI / 4; // Поворот птицы при ударе
-        shakeEffect = true; // Включаем эффект тряски
-        shakeDuration = 15; // Устанавливаем кратковременную тряску
+        bird.rotation = -Math.PI / 4;
+        shakeEffect = true;
+        shakeDuration = 15;
 
         setTimeout(() => {
             birdHit = false;
-            gameOver = true; // Переходим в состояние падения
-            shakeEffect = false; // Отключаем эффект тряски после удара
-        }, 500); // Задержка перед падением (500 мс)
+            gameOver = true;
+            shakeEffect = false;
+        }, 500);
         return;
     }
 
@@ -224,7 +233,6 @@ function update() {
         return;
     }
 
-    // Генерация труб
     if (frameCount % 75 === 0) {
         let minY = 50 * scale;
         let maxY = canvas.height - 200 * scale - pipeGap;
@@ -232,7 +240,6 @@ function update() {
         let pipe = { x: canvas.width, y: pipeY };
         pipes.push(pipe);
 
-        // Добавляем коктейль с редкой вероятностью
         if (Math.random() < coctelSpawnChance) {
             let coctelY = pipeY + Math.random() * (pipeGap - 30 * scale);
             coctels.push({
@@ -245,7 +252,6 @@ function update() {
         }
     }
 
-    // Обновление положения труб
     pipes.forEach((pipe, index) => {
         pipe.x -= 2 * scale;
 
@@ -257,13 +263,12 @@ function update() {
         let pipeTop = pipe.y;
         let pipeBottom = pipeTop + pipeGap;
 
-        // Проверка на столкновение
         if (
             bird.x < pipe.x + pipeWidth &&
             bird.x + bird.width > pipe.x &&
             (bird.y < pipeTop || bird.y + bird.height > pipeBottom)
         ) {
-            birdHit = true; // Устанавливаем флаг удара
+            birdHit = true;
             return;
         }
 
@@ -273,7 +278,6 @@ function update() {
         }
     });
 
-    // Обновление коктейлей
     coctels.forEach((coctel, index) => {
         coctel.x -= 2 * scale;
 
@@ -281,7 +285,6 @@ function update() {
             coctels.splice(index, 1);
         }
 
-        // Проверка на столкновение с коктейлем
         if (
             coctel.isVisible &&
             bird.x < coctel.x + coctel.width &&
@@ -290,13 +293,12 @@ function update() {
             bird.y + bird.height > coctel.y
         ) {
             coctel.isVisible = false;
-            activateDrunkenMode(); // Активируем "пьяный режим"
+            activateDrunkenMode();
         }
     });
 
-    // Обновление монет
-    if (frameCount % (coinInterval + Math.floor(Math.random() * 200)) === 0) { // Случайный интервал появления монет
-        const randomPipeIndex = Math.floor(Math.random() * pipes.length); // Выбираем случайную трубу для монет
+    if (frameCount % (coinInterval + Math.floor(Math.random() * 200)) === 0) {
+        const randomPipeIndex = Math.floor(Math.random() * pipes.length);
         const pipe = pipes[randomPipeIndex];
         if (pipe) {
             let coinX = pipe.x - 30 * scale;
@@ -313,7 +315,6 @@ function update() {
             coins.splice(index, 1);
         }
 
-        // Проверка на столкновение с монетой
         if (
             bird.x < coin.x + coin.width &&
             bird.x + bird.width > coin.x &&
@@ -321,7 +322,7 @@ function update() {
             bird.y + bird.height > coin.y
         ) {
             coins.splice(index, 1);
-            collectedCoins++; // Увеличиваем счетчик монет
+            collectedCoins++;
         }
     });
 
@@ -331,33 +332,30 @@ function update() {
         groundX = 0;
     }
 
-    // Эффект опьянения: усложненное управление птицей
     if (drunkenEffect) {
-        bird.velocity += Math.random() * 0.6 - 0.3; // Добавление случайных изменений в скорость
-        bird.rotation += Math.random() * 0.1 - 0.05; // Случайное изменение угла поворота
+        bird.velocity += Math.random() * 0.6 - 0.3;
+        bird.rotation += Math.random() * 0.1 - 0.05;
         drunkenDuration--;
         if (drunkenDuration <= 0) {
-            drunkenEffect = false; // Окончание эффекта опьянения
-            shakeEffect = false; // Окончание эффекта тряски
-            glitchEffect = false; // Окончание глитч-эффекта
-            backgroundGif = false; // Возвращаем фон к исходному состоянию
+            drunkenEffect = false;
+            shakeEffect = false;
+            glitchEffect = false;
+            backgroundGif = false;
         }
     }
 
-    // Эффект тряски
     if (shakeEffect) {
         shakeDuration--;
         if (shakeDuration <= 0) {
-            shakeEffect = false; // Остановка тряски
+            shakeEffect = false;
         }
     }
 
-    // Эффект глитча
     if (glitchEffect) {
         glitchDuration--;
         if (glitchDuration <= 0) {
-            glitchEffect = false; // Остановка глитч-эффекта
-            backgroundGif = false; // Вернуть фон к исходному
+            glitchEffect = false;
+            backgroundGif = false;
         }
     }
 }
@@ -365,7 +363,6 @@ function update() {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Отрисовка логотипа и заставки, если изображение загружено и игра еще не началась
     if (showZastavka && showLogo) {
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
         const zastavkaHeight = zastavkaImg.height * zastavkaScale;
@@ -375,32 +372,26 @@ function render() {
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
         const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavkaY - logoHeight - 150 * scale; // Отступ 20px над заставкой
+        const logoY = zastavkaY - logoHeight - 150 * scale;
 
-        // Отрисовка логотипа выше заставки
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
-
-        // Отрисовка заставки
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
-        return; // Остановить дальнейшую отрисовку, пока отображается заставка
+        return;
     }
 
-    // Отрисовка фона
     if (backgroundGif) {
         ctx.drawImage(fonGif, 0, 0, canvas.width, canvas.height);
     } else {
         ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     }
 
-    // Эффект тряски для труб и всего экрана
     ctx.save();
     if (shakeEffect) {
-        const shakeOffsetX = Math.random() * 10 - 5; // Больший эффект тряски при ударе
+        const shakeOffsetX = Math.random() * 10 - 5;
         const shakeOffsetY = Math.random() * 10 - 5;
         ctx.translate(shakeOffsetX, shakeOffsetY);
     }
 
-    // Отрисовка труб
     pipes.forEach(pipe => {
         let pipeTop = pipe.y;
         let pipeBottom = pipeTop + pipeGap;
@@ -413,23 +404,19 @@ function render() {
         ctx.restore();
     });
 
-    // Отрисовка коктейлей
     coctels.forEach(coctel => {
         if (coctel.isVisible) {
             ctx.drawImage(coctelImg, coctel.x, coctel.y, coctel.width, coctel.height);
         }
     });
 
-    // Отрисовка монет
     coins.forEach(coin => {
         ctx.drawImage(coinImg, coin.x, coin.y, coin.width, coin.height);
     });
 
-    // Отрисовка земли
     ctx.drawImage(zemlaImg, groundX, canvas.height - 50 * scale, canvas.width, 50 * scale);
     ctx.drawImage(zemlaImg, groundX + canvas.width, canvas.height - 50 * scale, canvas.width, 50 * scale);
 
-    // Эффект тряски и глитча для птички
     ctx.save();
     if (shakeEffect) {
         const shakeOffsetX = Math.random() * 5 - 2.5;
@@ -446,58 +433,50 @@ function render() {
     ctx.drawImage(birdImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
     ctx.restore();
 
-    // Отрисовка счета
-    ctx.font = `${48 * scale}px FlappyFont`; // Используем кастомный шрифт
+    ctx.font = `${48 * scale}px FlappyFont`;
     ctx.fillStyle = '#FCB800';
     ctx.fillText(score, canvas.width / 2 - 10 * scale, 100 * scale);
 
-    // Отрисовка счетчика монет
     ctx.drawImage(coinImg, 10 * scale, 10 * scale, 30 * scale, 30 * scale);
-    ctx.font = `${24 * scale}px FlappyFont`; // Используем кастомный шрифт
+    ctx.font = `${24 * scale}px FlappyFont`;
     ctx.fillStyle = '#FFF';
     ctx.fillText(collectedCoins, 50 * scale, 30 * scale);
 
-    // Отрисовка табло и изображения "Game Over", если игра окончена
     if (showTablo) {
         const tabloWidth = tabloImg.width * scale;
         const tabloHeight = tabloImg.height * scale;
         const tabloX = (canvas.width - tabloWidth) / 2;
         const tabloY = (canvas.height - tabloHeight) / 2;
 
-        // Отрисовка изображения "Game Over" чуть выше таблицы
         const overImgWidth = overImg.width * scale;
         const overImgHeight = overImg.height * scale;
         const overImgX = (canvas.width - overImgWidth) / 2;
-        const overImgY = tabloY - overImgHeight - 50 * scale; // Отступ 50px над таблицей
+        const overImgY = tabloY - overImgHeight - 50 * scale;
 
         ctx.drawImage(overImg, overImgX, overImgY, overImgWidth, overImgHeight);
 
-        // Отрисовка таблицы
         ctx.drawImage(tabloImg, tabloX, tabloY, tabloWidth, tabloHeight);
 
-        // Отрисовка изображения "Pusk" ниже таблицы
         const puskImgWidth = puskImg.width * scale;
         const puskImgHeight = puskImg.height * scale;
         const puskImgX = (canvas.width - puskImgWidth) / 2;
-        const puskImgY = tabloY + tabloHeight + 20 * scale; // Отступ 20px под таблицей
+        const puskImgY = tabloY + tabloHeight + 20 * scale;
 
         ctx.drawImage(puskImg, puskImgX, puskImgY, puskImgWidth, puskImgHeight);
 
-        // Отрисовка счетчиков на табло (монеты первым, счет вторым)
         ctx.font = `${36 * scale}px FlappyFont`;
         ctx.fillStyle = '#FFF';
-        ctx.fillText(collectedCoins, tabloX + tabloWidth - 66 * scale, tabloY + 57 * scale); // Монеты
-        ctx.fillText(score, tabloX + tabloWidth - 66 * scale, tabloY + 98 * scale); // Счет
+        ctx.fillText(collectedCoins, tabloX + tabloWidth - 66 * scale, tabloY + 57 * scale);
+        ctx.fillText(score, tabloX + tabloWidth - 66 * scale, tabloY + 98 * scale);
 
-        // Отображение только промокода обычным шрифтом Arial, если собрано достаточно монет
         if (collectedCoins >= coinsForPromoCode) {
-            ctx.font = `${15 * scale}px Arial`; // Шрифт Arial для промокода
+            ctx.font = `${15 * scale}px Arial`;
             ctx.fillStyle = '#FFF';
-            ctx.fillText(promoCode, tabloX + 20 * scale, tabloY + 65 * scale); // Промокод без слова "Promo"
+            ctx.fillText(promoCode, tabloX + 20 * scale, tabloY + 65 * scale);
         }
     }
 
-    ctx.restore(); // Восстанавливаем исходное состояние контекста после тряски
+    ctx.restore();
 }
 
 function resetGame() {
@@ -507,27 +486,28 @@ function resetGame() {
     bird.velocity = 0;
     bird.rotation = 0;
     pipes = [];
-    coctels = []; 
+    coctels = [];
     coins = [];
     frameCount = 0;
     score = 0;
     collectedCoins = 0;
-    passedPipe = false; // Сброс переменной passedPipe
-    birdHit = false; // Сброс флага удара
-    drunkenEffect = false; // Сброс пьяного режима
-    shakeEffect = false; // Сброс эффекта тряски
-    glitchEffect = false; // Сброс эффекта глитча
-    backgroundGif = false; // Сброс фона
-    showTablo = false; // Сброс отображения табло
+    passedPipe = false;
+    birdHit = false;
+    drunkenEffect = false;
+    shakeEffect = false;
+    glitchEffect = false;
+    backgroundGif = false;
+    showTablo = false;
     gameOver = false;
 }
 
 function activateDrunkenMode() {
     drunkenEffect = true;
-    drunkenDuration = 1200; // Продолжительность пьяного режима
+    drunkenDuration = 1200;
     shakeEffect = true;
-    shakeDuration = 150; // Продолжительность эффекта тряски
+    shakeDuration = 150;
     glitchEffect = true;
-    glitchDuration = 150; // Продолжительность глитч-эффекта
-    backgroundGif = true; // Сменить фон на гифку
+    glitchDuration = 150;
+    backgroundGif = true;
 }
+
