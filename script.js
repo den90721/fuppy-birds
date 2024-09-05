@@ -380,16 +380,18 @@ function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (showZastavka && showLogo) {
+        // Определяем размеры заставки
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
-        const zastavkaHeight = zastavkaImg.height * zastavkaScale;
+        const zastavkaHeight = zastavkaImg.height * zastavkaScale; // Инициализация переменной
         const zastavkaX = (canvas.width - zastavkaWidth) / 2;
-        const zastavkaY = (canvas.height - zastavкаHeight) / 2;
+        const zastavkaY = (canvas.height - zastavkaHeight) / 2;
 
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
         const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavкаY - logoHeight - 150 * scale;
+        const logoY = zastavkaY - logoHeight - 150 * scale;
 
+        // Отрисовка заставки и логотипа
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
         return;
@@ -526,4 +528,3 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
-
