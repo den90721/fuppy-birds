@@ -106,7 +106,7 @@ const tabloImg = new Image();
 tabloImg.src = 'assets/tablo (4).svg';
 
 const overImg = new Image();
-overImg.src = 'assets/over.svg';
+overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
 puskImg.src = 'assets/pusk.svg';
