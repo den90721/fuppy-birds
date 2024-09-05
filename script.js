@@ -317,7 +317,7 @@ function update() {
             let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
 
             // Проверяем, чтобы новая монета не была слишком близко к последней
-            if (coinX - lastCoinX > 50 * scale) { // 50 - минимальное расстояние между монетами
+            if (coinX - lastCoinX > 10 * scale) { // 50 - минимальное расстояние между монетами
                 coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
                 lastCoinX = coinX; // Обновляем последнюю позицию монеты
             }
