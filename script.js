@@ -57,11 +57,10 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-const coctelSpawnChance = 0.5; // Увеличиваем вероятность появления коктейлей до 50%
+let pipeCount = 0; // Счётчик труб
 
 let coins = [];
 let coinInterval = 50;
-let pipeCount = 0;
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -248,17 +247,10 @@ function update() {
         let pipe = { x: canvas.width, y: pipeY };
         pipes.push(pipe);
 
-        pipeCount++;
+        pipeCount++; // Увеличиваем счетчик труб
 
-        // Если это третья труба, создаём монету
-        if (pipeCount % 3 === 0) {
-            let coinX = pipe.x - 30 * scale;
-            let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
-            coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
-        }
-
-        // Создание коктейлей
-        if (Math.random() < coctelSpawnChance) {
+        // Если это каждая 7-я труба, создаём коктейль
+        if (pipeCount % 7 === 0) {
             let coctelY = Math.min(Math.max(pipeY, 50), canvas.height - 100); // Ограничиваем по Y
             coctels.push({
                 x: pipe.x,
@@ -267,6 +259,13 @@ function update() {
                 height: 30 * scale,
                 isVisible: true
             });
+        }
+
+        // Создание монет каждая третья труба
+        if (pipeCount % 3 === 0) {
+            let coinX = pipe.x - 30 * scale;
+            let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
+            coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
         }
     }
 
@@ -374,12 +373,12 @@ function render() {
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
         const zastavkaHeight = zastavkaImg.height * zastavkaScale;
         const zastavkaX = (canvas.width - zastavkaWidth) / 2;
-        const zastavkaY = (canvas.height - zastavkaHeight) / 2;
+        const zastavkaY = (canvas.height - zastavкаHeight) / 2;
 
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
         const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavкаY - logoHeight - 150 * scale;
+        const logoY = zastavkaY - logoHeight - 150 * scale;
 
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
