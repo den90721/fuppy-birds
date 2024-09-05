@@ -97,7 +97,7 @@ const fonGif = new Image();
 fonGif.src = 'assets/fon.gif';
 
 const coctelImg = new Image();
-coctelImg.src = 'assets/coctel.png'; // Убедитесь, что путь правильный
+coctelImg.src = 'assets/coctel.png';
 
 const coinImg = new Image();
 coinImg.src = 'assets/coin.png';
@@ -109,7 +109,7 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.svg';
+puskImg.src = 'assets/pusk.png';
 
 const zastavkaImg = new Image();
 zastavkaImg.src = 'assets/zastavka (2).png';
@@ -249,9 +249,9 @@ function update() {
 
         pipeCount++; // Увеличиваем счетчик труб
 
-        // Если это каждая 7-я труба, создаём коктейль
+        // Если это каждая 7-я труба, создаём коктейль в середине промежутка между трубами
         if (pipeCount % 7 === 0) {
-            let coctelY = Math.min(Math.max(pipeY, 50), canvas.height - 100); // Ограничиваем по Y
+            let coctelY = pipeY + pipeGap / 2 - (30 * scale) / 2; // Коктейль по середине промежутка между трубами
             coctels.push({
                 x: pipe.x,
                 y: coctelY,
@@ -373,7 +373,7 @@ function render() {
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
         const zastavkaHeight = zastavkaImg.height * zastavkaScale;
         const zastavkaX = (canvas.width - zastavkaWidth) / 2;
-        const zastavkaY = (canvas.height - zastavкаHeight) / 2;
+        const zastavkaY = (canvas.height - zastavkaHeight) / 2;
 
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
@@ -516,4 +516,5 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
+
 
