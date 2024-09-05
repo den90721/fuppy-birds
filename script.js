@@ -149,22 +149,21 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Убираем запуск игры при клике по холсту
-canvas.removeEventListener('click', function () {
-    if (!gameStarted || gameOver) {
+// Добавляем обработчик клика для холста для первого запуска игры
+canvas.addEventListener('click', function () {
+    if (!gameStarted && !gameOver) {
         showZastavka = false;
         showLogo = false;
         showTablo = false;
         resetGame();
         gameStarted = true;
-        gameOver = false;
         startGameLoop();
-    } else {
+    } else if (gameStarted && !gameOver) {
         bird.velocity = bird.lift;
     }
 });
 
-// Добавляем обработчик клика для изображения "Pusk"
+// Добавляем обработчик клика для изображения "Pusk" для перезапуска после смерти
 puskImg.addEventListener('click', function () {
     if (gameOver) {
         showZastavka = false;
