@@ -134,6 +134,7 @@ zastavkaImg.onload = function() {
 };
 
 let animationFrameId;
+let lastCoinX = -Infinity; // Инициализируем переменную для хранения позиции последней монеты
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -307,6 +308,7 @@ function update() {
         }
     });
 
+    // Создание монет с проверкой минимального расстояния
     if (frameCount % (coinInterval + Math.floor(Math.random() * 100)) === 0) {
         const randomPipeIndex = Math.floor(Math.random() * pipes.length);
         const pipe = pipes[randomPipeIndex];
@@ -314,7 +316,11 @@ function update() {
             let coinX = pipe.x - 30 * scale;
             let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
 
-            coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
+            // Проверяем, чтобы новая монета не была слишком близко к последней
+            if (coinX - lastCoinX > 50 * scale) { // 50 - минимальное расстояние между монетами
+                coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
+                lastCoinX = coinX; // Обновляем последнюю позицию монеты
+            }
         }
     }
 
@@ -377,12 +383,12 @@ function render() {
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
         const zastavkaHeight = zastavkaImg.height * zastavkaScale;
         const zastavkaX = (canvas.width - zastavkaWidth) / 2;
-        const zastavkaY = (canvas.height - zastavkaHeight) / 2;
+        const zastavkaY = (canvas.height - zastavкаHeight) / 2;
 
         const logoWidth = logoImg.width * logoScale;
         const logoHeight = logoImg.height * logoScale;
         const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavkaY - logoHeight - 150 * scale;
+        const logoY = zastavкаY - logoHeight - 150 * scale;
 
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
@@ -520,3 +526,4 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
+
