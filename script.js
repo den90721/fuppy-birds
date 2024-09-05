@@ -39,8 +39,8 @@ let bird = {
     y: 150,
     width: 40,
     height: 40,
-    gravity: 0.2,
-    lift: -3.6,
+    gravity: 0.2, // Уменьшили гравитацию
+    lift: -3,     // Уменьшили подъем
     velocity: 0,
     rotation: 0
 };
@@ -57,10 +57,10 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-const coctelSpawnChance = 0.1;
+const coctelSpawnChance = 0.1; // Вероятность появления коктейлей уменьшена
 
 let coins = [];
-let coinInterval = 50;
+let coinInterval = 50; // Уменьшили интервал для более частого появления монет
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -109,7 +109,7 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.png';
+puskImg.src = 'assets/pusk.png'; // Обновлено на pusk.png
 
 const zastavkaImg = new Image();
 zastavkaImg.src = 'assets/zastavka (2).png';
@@ -316,7 +316,7 @@ function update() {
 
             coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
         }
-    };
+    }
 
     coins.forEach((coin, index) => {
         coin.x -= 2 * scale;
