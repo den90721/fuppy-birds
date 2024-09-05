@@ -109,7 +109,7 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.png'; // Обновлено на pusk.png
+puskImg.src = 'assets/pusk.svg'; // Обновлено на pusk.png
 
 const zastavkaImg = new Image();
 zastavkaImg.src = 'assets/zastavka (2).png';
