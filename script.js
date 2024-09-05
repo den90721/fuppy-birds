@@ -18,7 +18,7 @@ style.innerHTML = `
         left: 0;
     }
     img {
-        image-rendering: crisp-edges;
+        image-rendering: auto;
     }
 `;
 document.head.appendChild(style);
