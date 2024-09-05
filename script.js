@@ -150,29 +150,30 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 // Добавляем обработчик клика для холста для первого запуска игры
-canvas.addEventListener('click', function () {
-    if (!gameStarted && !gameOver) {
-        showZastavka = false;
-        showLogo = false;
-        showTablo = false;
-        resetGame();
-        gameStarted = true;
-        startGameLoop();
+canvas.addEventListener('click', function (event) {
+    if (gameOver && showTablo) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const puskImgWidth = puskImg.width * scale;
+        const puskImgHeight = puskImg.height * scale;
+        const puskImgX = (canvas.width - puskImgWidth) / 2;
+        const puskImgY = (canvas.height - puskImgHeight) / 2 + 100 * scale; // отрегулируйте позицию по Y
+
+        // Проверка, попал ли клик в область изображения "Pusk"
+        if (mouseX >= puskImgX && mouseX <= puskImgX + puskImgWidth &&
+            mouseY >= puskImgY && mouseY <= puskImgY + puskImgHeight) {
+            showZastavka = false;
+            showLogo = false;
+            showTablo = false;
+            resetGame();
+            gameStarted = true;
+            gameOver = false;
+            startGameLoop();
+        }
     } else if (gameStarted && !gameOver) {
         bird.velocity = bird.lift;
-    }
-});
-
-// Добавляем обработчик клика для изображения "Pusk" для перезапуска после смерти
-puskImg.addEventListener('click', function () {
-    if (gameOver) {
-        showZastavka = false;
-        showLogo = false;
-        showTablo = false;
-        resetGame();
-        gameStarted = true;
-        gameOver = false;
-        startGameLoop();
     }
 });
 
@@ -509,4 +510,3 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
-
