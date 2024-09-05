@@ -39,8 +39,8 @@ let bird = {
     y: 150,
     width: 40,
     height: 40,
-    gravity: 0.2, // Уменьшили гравитацию
-    lift: -3,     // Уменьшили подъем
+    gravity: 0.2,
+    lift: -3,
     velocity: 0,
     rotation: 0
 };
@@ -57,10 +57,11 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-const coctelSpawnChance = 0.1; // Вероятность появления коктейлей уменьшена
+const coctelSpawnChance = 0.1;
 
 let coins = [];
-let coinInterval = 20; // Уменьшили интервал для более частого появления монет
+let coinInterval = 50;
+let pipeCount = 0; // Счётчик труб
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -109,7 +110,7 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.svg'; // Обновлено на pusk.png
+puskImg.src = 'assets/pusk.svg';
 
 const zastavkaImg = new Image();
 zastavkaImg.src = 'assets/zastavka (2).png';
@@ -134,7 +135,7 @@ zastavkaImg.onload = function() {
 };
 
 let animationFrameId;
-let lastCoinX = -Infinity; // Инициализируем переменную для хранения позиции последней монеты
+let lastCoinX = -Infinity;
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -153,7 +154,6 @@ resizeCanvas();
 // Добавляем обработчик клика для холста для первого запуска игры
 canvas.addEventListener('click', function (event) {
     if (!gameStarted && !gameOver) {
-        // Игра не запущена, запускаем её
         showZastavka = false;
         showLogo = false;
         showTablo = false;
@@ -161,10 +161,8 @@ canvas.addEventListener('click', function (event) {
         gameStarted = true;
         startGameLoop();
     } else if (gameStarted && !gameOver) {
-        // Игра запущена, поднимаем птицу
         bird.velocity = bird.lift;
     } else if (gameOver && showTablo) {
-        // Проверяем клик по кнопке "Pusk"
         const rect = canvas.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
@@ -172,9 +170,8 @@ canvas.addEventListener('click', function (event) {
         const puskImgWidth = puskImg.width * scale;
         const puskImgHeight = puskImg.height * scale;
         const puskImgX = (canvas.width - puskImgWidth) / 2;
-        const puskImgY = (canvas.height - puskImgHeight) / 2 + 100 * scale; // отрегулируйте позицию по Y
+        const puskImgY = (canvas.height - puskImgHeight) / 2 + 100 * scale;
 
-        // Проверка, попал ли клик в область изображения "Pusk"
         if (mouseX >= puskImgX && mouseX <= puskImgX + puskImgWidth &&
             mouseY >= puskImgY && mouseY <= puskImgY + puskImgHeight) {
             showZastavka = false;
@@ -251,6 +248,15 @@ function update() {
         let pipe = { x: canvas.width, y: pipeY };
         pipes.push(pipe);
 
+        pipeCount++; // Увеличиваем счетчик труб
+
+        // Если это третья труба, создаём монету
+        if (pipeCount % 3 === 0) {
+            let coinX = pipe.x - 30 * scale;
+            let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
+            coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
+        }
+
         if (Math.random() < coctelSpawnChance) {
             let coctelY = pipeY + Math.random() * (pipeGap - 30 * scale);
             coctels.push({
@@ -288,41 +294,6 @@ function update() {
             passedPipe = true;
         }
     });
-
-    coctels.forEach((coctel, index) => {
-        coctel.x -= 2 * scale;
-
-        if (coctel.x + coctel.width < 0) {
-            coctels.splice(index, 1);
-        }
-
-        if (
-            coctel.isVisible &&
-            bird.x < coctel.x + coctel.width &&
-            bird.x + bird.width > coctel.x &&
-            bird.y < coctel.y + coctel.height &&
-            bird.y + bird.height > coctel.y
-        ) {
-            coctel.isVisible = false;
-            activateDrunkenMode();
-        }
-    });
-
-    // Создание монет с проверкой минимального расстояния
-    if (frameCount % (coinInterval + Math.floor(Math.random() * 50)) === 0) {
-        const randomPipeIndex = Math.floor(Math.random() * pipes.length);
-        const pipe = pipes[randomPipeIndex];
-        if (pipe) {
-            let coinX = pipe.x - 30 * scale;
-            let coinY = pipe.y + Math.random() * (pipeGap - 30 * scale);
-
-            // Проверяем, чтобы новая монета не была слишком близко к последней
-            if (coinX - lastCoinX > 10 * scale) { // 50 - минимальное расстояние между монетами
-                coins.push({ x: coinX, y: coinY, width: 30 * scale, height: 30 * scale });
-                lastCoinX = coinX; // Обновляем последнюю позицию монеты
-            }
-        }
-    }
 
     coins.forEach((coin, index) => {
         coin.x -= 2 * scale;
@@ -380,9 +351,8 @@ function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (showZastavka && showLogo) {
-        // Определяем размеры заставки
         const zastavkaWidth = zastavkaImg.width * zastavkaScale;
-        const zastavkaHeight = zastavkaImg.height * zastavkaScale; // Инициализация переменной
+        const zastavkaHeight = zastavkaImg.height * zastavkaScale;
         const zastavkaX = (canvas.width - zastavkaWidth) / 2;
         const zastavkaY = (canvas.height - zastavkaHeight) / 2;
 
@@ -391,7 +361,6 @@ function render() {
         const logoX = (canvas.width - logoWidth) / 2;
         const logoY = zastavkaY - logoHeight - 150 * scale;
 
-        // Отрисовка заставки и логотипа
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
         return;
