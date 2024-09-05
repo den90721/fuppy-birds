@@ -39,7 +39,7 @@ let bird = {
     y: 150,
     width: 40,
     height: 40,
-    gravity: 0.3,
+    gravity: 0.2,
     lift: -6,
     velocity: 0,
     rotation: 0
