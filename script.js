@@ -60,7 +60,7 @@ let coctels = [];
 const coctelSpawnChance = 0.1; // Вероятность появления коктейлей уменьшена
 
 let coins = [];
-let coinInterval = 50; // Уменьшили интервал для более частого появления монет
+let coinInterval = 20; // Уменьшили интервал для более частого появления монет
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -309,7 +309,7 @@ function update() {
     });
 
     // Создание монет с проверкой минимального расстояния
-    if (frameCount % (coinInterval + Math.floor(Math.random() * 100)) === 0) {
+    if (frameCount % (coinInterval + Math.floor(Math.random() * 50)) === 0) {
         const randomPipeIndex = Math.floor(Math.random() * pipes.length);
         const pipe = pipes[randomPipeIndex];
         if (pipe) {
