@@ -60,7 +60,7 @@ let coctels = []; // Массив для коктейлей
 const coctelSpawnChance = 0.2; // Вероятность появления коктейля (20%)
 
 let coins = [];
-let coinInterval = 320; // Интервал появления монет
+let coinInterval = 150; // Интервал появления монет
 
 let groundX = 0;
 const groundSpeed = 2;
@@ -78,8 +78,8 @@ let showTablo = false;
 let shakeOnHit = false; // Флаг для активации тряски при ударе
 
 // Условие для отображения промокода
-const coinsForPromoCode = 1; // Количество монет для появления промокода
-const promoCode = "PROMO123"; // Сам промокод
+const coinsForPromoCode = 150; // Количество монет для появления промокода
+const promoCode = "AVAHUNNA100"; // Сам промокод
 
 // Загрузка изображений
 const birdImg = new Image();
