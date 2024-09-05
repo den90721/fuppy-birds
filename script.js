@@ -151,7 +151,19 @@ resizeCanvas();
 
 // Добавляем обработчик клика для холста для первого запуска игры
 canvas.addEventListener('click', function (event) {
-    if (gameOver && showTablo) {
+    if (!gameStarted && !gameOver) {
+        // Игра не запущена, запускаем её
+        showZastavka = false;
+        showLogo = false;
+        showTablo = false;
+        resetGame();
+        gameStarted = true;
+        startGameLoop();
+    } else if (gameStarted && !gameOver) {
+        // Игра запущена, поднимаем птицу
+        bird.velocity = bird.lift;
+    } else if (gameOver && showTablo) {
+        // Проверяем клик по кнопке "Pusk"
         const rect = canvas.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
@@ -172,8 +184,6 @@ canvas.addEventListener('click', function (event) {
             gameOver = false;
             startGameLoop();
         }
-    } else if (gameStarted && !gameOver) {
-        bird.velocity = bird.lift;
     }
 });
 
