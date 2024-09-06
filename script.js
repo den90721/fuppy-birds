@@ -57,7 +57,7 @@ let gameOver = false;
 let birdHit = false;
 
 let coctels = [];
-let pipeCount = 0; // Счётчик труб
+let pipeCount = 0;
 
 let coins = [];
 let coinInterval = 50;
@@ -74,6 +74,7 @@ let glitchEffect = false;
 let glitchDuration = 0;
 let backgroundGif = false;
 let showTablo = false;
+let showNachako = true; // Показ заставки при первом запуске
 
 let shakeOnHit = false;
 
@@ -109,10 +110,13 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.svg';
+puskImg.src = 'assets/pusk.png';
 
 const zastavkaImg = new Image();
 zastavkaImg.src = 'assets/zastavka (2).png';
+
+const nachakoImg = new Image();
+nachakoImg.src = 'assets/nachako.png'; // Загрузка заставки
 
 const logoImg = new Image();
 logoImg.src = 'assets/Logo.svg';
@@ -152,14 +156,19 @@ resizeCanvas();
 
 // Добавляем обработчик клика для холста для первого запуска игры
 canvas.addEventListener('click', function (event) {
-    if (!gameStarted && !gameOver) {
-        showZastavka = false;
-        showLogo = false;
-        showTablo = false;
+    if (showNachako) {
+        // Убираем заставку и начинаем игру
+        showNachako = false;
+        resetGame();
+        gameStarted = true;
+        startGameLoop();
+    } else if (!gameStarted && !gameOver) {
+        // Игра не запущена, запускаем её
         resetGame();
         gameStarted = true;
         startGameLoop();
     } else if (gameStarted && !gameOver) {
+        // Игра запущена, поднимаем птицу
         bird.velocity = bird.lift;
     } else if (gameOver && showTablo) {
         const rect = canvas.getBoundingClientRect();
@@ -171,11 +180,9 @@ canvas.addEventListener('click', function (event) {
         const puskImgX = (canvas.width - puskImgWidth) / 2;
         const puskImgY = (canvas.height - puskImgHeight) / 2 + 100 * scale;
 
+        // Проверка, попал ли клик в область изображения "Pusk"
         if (mouseX >= puskImgX && mouseX <= puskImgX + puskImgWidth &&
             mouseY >= puskImgY && mouseY <= puskImgY + puskImgHeight) {
-            showZastavka = false;
-            showLogo = false;
-            showTablo = false;
             resetGame();
             gameStarted = true;
             gameOver = false;
@@ -369,20 +376,15 @@ function update() {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (showZastavka && showLogo) {
-        const zastavkaWidth = zastavkaImg.width * zastavkaScale;
-        const zastavkaHeight = zastavkaImg.height * zastavkaScale;
-        const zastavkaX = (canvas.width - zastavkaWidth) / 2;
-        const zastavkaY = (canvas.height - zastavkaHeight) / 2;
+    // Если показывается заставка, отображаем изображение nachako.png
+    if (showNachako) {
+        const nachakoWidth = nachakoImg.width * zastavkaScale;
+        const nachakoHeight = nachakoImg.height * zastavkaScale;
+        const nachakoX = (canvas.width - nachakoWidth) / 2;
+        const nachakoY = (canvas.height - nachakoHeight) / 2;
 
-        const logoWidth = logoImg.width * logoScale;
-        const logoHeight = logoImg.height * logoScale;
-        const logoX = (canvas.width - logoWidth) / 2;
-        const logoY = zastavkaY - logoHeight - 150 * scale;
-
-        ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
-        ctx.drawImage(zastavkaImg, zastavkaX, zastavkaY, zastavkaWidth, zastavkaHeight);
-        return;
+        ctx.drawImage(nachakoImg, nachakoX, nachakoY, nachakoWidth, nachakoHeight);
+        return; // Прекращаем отрисовку игры, пока показывается заставка
     }
 
     if (backgroundGif) {
@@ -516,5 +518,4 @@ function activateDrunkenMode() {
     glitchDuration = 150;
     backgroundGif = true;
 }
-
 
