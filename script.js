@@ -113,7 +113,7 @@ const puskImg = new Image();
 puskImg.src = 'assets/pusk.svg';
 
 const nachakoImg = new Image();
-nachakoImg.src = 'assets/nachako.png'; // Загрузка заставки
+nachakoImg.src = 'assets/nachako.svg'; // Загрузка заставки
 
 const logoImg = new Image();
 logoImg.src = 'assets/Logo.svg';
