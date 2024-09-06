@@ -110,10 +110,7 @@ const overImg = new Image();
 overImg.src = 'assets/OVER.svg';
 
 const puskImg = new Image();
-puskImg.src = 'assets/pusk.png';
-
-const zastavkaImg = new Image();
-zastavkaImg.src = 'assets/zastavka (2).png';
+puskImg.src = 'assets/pusk.svg';
 
 const nachakoImg = new Image();
 nachakoImg.src = 'assets/nachako.png'; // Загрузка заставки
@@ -132,8 +129,7 @@ logoImg.onload = function() {
     render();
 };
 
-zastavkaImg.onload = function() {
-    showZastavka = true;
+nachakoImg.onload = function() {
     render();
 };
 
@@ -376,14 +372,9 @@ function update() {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Если показывается заставка, отображаем изображение nachako.png
+    // Если показывается заставка, отображаем изображение nachako.png, которое увеличивается до размеров экрана
     if (showNachako) {
-        const nachakoWidth = nachakoImg.width * zastavkaScale;
-        const nachakoHeight = nachakoImg.height * zastavkaScale;
-        const nachakoX = (canvas.width - nachakoWidth) / 2;
-        const nachakoY = (canvas.height - nachakoHeight) / 2;
-
-        ctx.drawImage(nachakoImg, nachakoX, nachakoY, nachakoWidth, nachakoHeight);
+        ctx.drawImage(nachakoImg, 0, 0, canvas.width, canvas.height); // Изображение увеличивается на весь экран
         return; // Прекращаем отрисовку игры, пока показывается заставка
     }
 
